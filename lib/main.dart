@@ -1,6 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:hive_flutter/adapters.dart';
+import 'package:peaje_control/model/pasada.dart';
+import 'package:peaje_control/model/peaje.dart';
+import 'package:peaje_control/model/peajeregistro.dart';
 
-void main() {
+
+void main() async{
+
+  await Hive.initFlutter();
+  Hive.registerAdapter(PeajeAdapter());
+  Hive.registerAdapter(PasadaAdapter());
+  Hive.registerAdapter(PeajeRegistroAdapter());
+
+
   runApp(const MyApp());
 }
 
