@@ -23,7 +23,7 @@ class _HomeScreenState extends State<HomeScreen> {
   List<Placa> _placas = [];
 
   @override
-  void initState(){
+  void initState() {
     super.initState();
     _loadInfo();
   }
@@ -57,9 +57,10 @@ class _HomeScreenState extends State<HomeScreen> {
     List<Widget> cols = [];
     cols.add(const Center(
       child: Text(
-        'Control de Saldo de Peajes',
+        'Registre sus placas y los peajes en los cuales tiene registrado',
+        textAlign: TextAlign.center,
         style: TextStyle(
-            fontSize: 24, fontWeight: FontWeight.bold, color: Colors.blueGrey),
+            fontSize: 22, fontWeight: FontWeight.bold, color: Colors.blueGrey),
       ),
     ));
     cols.add(Column(
@@ -74,35 +75,41 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget _cardPlaca(int index) {
     return Card(
       elevation: 5,
-      child: Column(
-        children: [
-          Wrap(
-            spacing: 10,
-            children: [
-              Text(
-                _placas[index].placa,
-                style: const TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.blueGrey),
-              ),
-              IconButton(
-                  onPressed: () {
-                    _openDialogPeaje(index);
-                  },
-                  icon: const Icon(
-                    Icons.add,
-                    color: Colors.blue,
-                  ))
-            ],
-          ),
-          const SizedBox(height: 10),
-          Column(
-            children: List.generate(_placas[index].peajes.length, (indexPeaje) {
-              return _cardPeaje(index, indexPeaje);
-            }),
-          ),
-        ],
+      child: Padding(
+        padding: const EdgeInsets.all(5),
+        child: Column(
+          children: [
+            const SizedBox(height: 5),
+            Row(
+              mainAxisSize: MainAxisSize.max,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  _placas[index].placa,
+                  style: const TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.blueGrey),
+                ),
+                IconButton(
+                    onPressed: () {
+                      _openDialogPeaje(index);
+                    },
+                    icon: const Icon(
+                      Icons.add,
+                      color: Colors.blue,
+                    )),
+              ],
+            ),
+            const SizedBox(height: 10),
+            Column(
+              children:
+                  List.generate(_placas[index].peajes.length, (indexPeaje) {
+                return _cardPeaje(index, indexPeaje);
+              }),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -113,12 +120,13 @@ class _HomeScreenState extends State<HomeScreen> {
       title: Text(_placas[indexPlaca].peajes[indexPeaje].peaje.nombre),
       trailing: Text(
         _placas[indexPlaca].peajes[indexPeaje].saldo.toStringAsFixed(2),
-        style: const TextStyle(color: Colors.red),
+        style: TextStyle(
+            color: _colorSaldo(_placas[indexPlaca].peajes[indexPeaje].saldo),
+            fontSize: 20),
       ),
       subtitle: Wrap(
         spacing: 5,
         children: [
-          ElevatedButton(onPressed: () {}, child: const Text('Recarga')),
           Row(
             children: List.generate(
                 _placas[indexPlaca].peajes[indexPeaje].peaje.valorPasada.length,
@@ -140,10 +148,21 @@ class _HomeScreenState extends State<HomeScreen> {
                       .valorPasada[index]
                       .toStringAsFixed(2)));
             }),
-          )
+          ),
+          ElevatedButton(onPressed: () {}, child: const Text('Recarga')),
         ],
       ),
     );
+  }
+
+  Color _colorSaldo(double val) {
+    if (val > 5) {
+      return Colors.green;
+    } else if (val > 0) {
+      return Colors.deepOrangeAccent;
+    } else {
+      return Colors.red;
+    }
   }
 
   ///abre el dialogo para crear una placa
