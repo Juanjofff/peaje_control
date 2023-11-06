@@ -7,7 +7,6 @@ import '../enums/enum.dart';
 import '../model/placa.dart';
 
 class PeajeService {
-
   ///Limpia la lista de peajes creados, y crea nuevos.
   Future createPeajes() async {
     var data = await Hive.openBox(Database.peaje.val);
@@ -32,24 +31,44 @@ class PeajeService {
   }
 
   ///actualiza el saldo de un peaje según el valor de la pasada
-  Future updatePeajeInPlaca(int indexPlaca, int indexPeaje, double pasada) async {
+  Future updatePeajeInPlaca(
+      int indexPlaca, int indexPeaje, double pasada) async {
     var data = await Hive.openBox(Database.registros.val);
     Placa placa = List.from(data.values)[indexPlaca];
-    placa.peajes[indexPeaje].pasadas = placa.peajes[indexPeaje].pasadas + pasada;
+    placa.peajes[indexPeaje].pasadas =
+        placa.peajes[indexPeaje].pasadas + pasada;
     placa.peajes[indexPeaje].saldo = placa.peajes[indexPeaje].saldo - pasada;
-    Pasada p = Pasada(placa.peajes[indexPeaje].saldo, DateTime.now(), false);
+    Pasada p =
+        Pasada(placa.peajes[indexPeaje].saldo, DateTime.now(), false, pasada);
     placa.peajes[indexPeaje].listaPasadas.add(p);
     await data.put(indexPlaca, placa);
   }
 
   ///actualiza el saldo de un peaje según el valor de la pasada
-  Future updateRecargaPeajeInPlaca(int indexPlaca, int indexPeaje, double pasada) async {
+  Future updateRecargaPeajeInPlaca(
+      int indexPlaca, int indexPeaje, double pasada) async {
     var data = await Hive.openBox(Database.registros.val);
     Placa placa = List.from(data.values)[indexPlaca];
-    placa.peajes[indexPeaje].recargas = placa.peajes[indexPeaje].recargas + pasada;
+    placa.peajes[indexPeaje].recargas =
+        placa.peajes[indexPeaje].recargas + pasada;
     placa.peajes[indexPeaje].saldo = placa.peajes[indexPeaje].saldo + pasada;
-    Pasada p = Pasada(placa.peajes[indexPeaje].saldo, DateTime.now(), true);
+    Pasada p =
+        Pasada(placa.peajes[indexPeaje].saldo, DateTime.now(), true, pasada);
     placa.peajes[indexPeaje].listaPasadas.add(p);
     await data.put(indexPlaca, placa);
+  }
+
+  ///registra un nuevo peaje en una placa
+  Future removePeajeInPlaca(int indexPeaje, int indexPlaca) async {
+    var data = await Hive.openBox(Database.registros.val);
+    Placa placa = List.from(data.values)[indexPlaca];
+    placa.peajes.removeAt(indexPeaje);
+    await data.put(indexPlaca, placa);
+  }
+
+  ///registra una nueva placa
+  Future removePlaca(int index) async {
+    var data = await Hive.openBox(Database.registros.val);
+    await data.delete(index);
   }
 }

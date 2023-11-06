@@ -20,19 +20,22 @@ class PasadaAdapter extends TypeAdapter<Pasada> {
       fields[0] as double,
       fields[1] as DateTime,
       fields[2] as bool,
+      fields[3] as double,
     );
   }
 
   @override
   void write(BinaryWriter writer, Pasada obj) {
     writer
-      ..writeByte(3)
+      ..writeByte(4)
       ..writeByte(0)
       ..write(obj.saldoRestante)
       ..writeByte(1)
       ..write(obj.fechaPasada)
       ..writeByte(2)
-      ..write(obj.recarga);
+      ..write(obj.recarga)
+      ..writeByte(3)
+      ..write(obj.valorPasada);
   }
 
   @override

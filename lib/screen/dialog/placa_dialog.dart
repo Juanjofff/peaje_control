@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:peaje_control/screen/util/util.dart';
 
 class PlacaDialog extends StatefulWidget {
   const PlacaDialog({super.key});
@@ -25,12 +26,7 @@ class _PlacaDialogState extends State<PlacaDialog> {
             decoration:
                 const InputDecoration(hintText: 'Placa', labelText: 'Placa'),
           ),
-          Visibility(
-              visible: _showMessage,
-              child: Text(
-                _message,
-                style: const TextStyle(color: Colors.red),
-              )),
+          Util().visibleUtil(_showMessage, _message),
         ],
       ),
       actions: [
@@ -56,9 +52,7 @@ class _PlacaDialogState extends State<PlacaDialog> {
                 )),
             IconButton(
                 onPressed: () {
-                    Navigator.of(context)
-                        .pop('');
-                  
+                  Navigator.of(context).pop('');
                 },
                 icon: const Icon(
                   Icons.do_disturb,
